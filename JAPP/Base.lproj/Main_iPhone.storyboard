@@ -1,27 +1,518 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5023" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="qNL-FD-pUq">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
-        <!--class Prefix:identifier View Controller-->
+        <!--Navigation Controller-->
+        <scene sceneID="Y5X-xJ-axq">
+            <objects>
+                <navigationController definesPresentationContext="YES" navigationBarHidden="YES" id="qNL-FD-pUq" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="sLi-EL-aU2">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="tfB-Xt-beb" kind="relationship" relationship="rootViewController" id="NRK-2A-WMM"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ng0-LK-Env" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-652" y="124"/>
+        </scene>
+        <!--Home Screen View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="root" id="vXZ-lx-hvc" userLabel="Home Screen View Controller" customClass="MapViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
-                        <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
+                        <viewControllerLayoutGuide type="top" id="mgd-J7-gy2"/>
+                        <viewControllerLayoutGuide type="bottom" id="1gu-as-Ecb"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ALc-ui-ADH">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cwH-Xh-1Mz">
+                                <rect key="frame" x="134" y="509" width="53" height="53"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="hilfe_button-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="2F6-nR-Czs" kind="custom" identifier="openHilfePopUpView" customClass="BlurryModalSegue" id="30h-gs-Yaj"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6bh-tx-k1m">
+                                <rect key="frame" x="219" y="509" width="53" height="53"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="geschehen_button-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="ySg-Yt-XeF" kind="custom" identifier="openAgendaView" customClass="BlurryModalSegue" id="2Ya-Oj-ZEU"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oWs-Bc-iDl">
+                                <rect key="frame" x="48" y="509" width="53" height="53"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="liste_button-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="lfy-hu-tks" kind="custom" identifier="openTreffListeView" customClass="BlurryModalSegue" id="fd7-0Z-6U9"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="1gu-as-Ecb" firstAttribute="top" secondItem="6bh-tx-k1m" secondAttribute="bottom" constant="6" id="cLE-u0-Y81"/>
+                            <constraint firstItem="6bh-tx-k1m" firstAttribute="leading" secondItem="cwH-Xh-1Mz" secondAttribute="trailing" constant="32" id="mNR-zM-c9l"/>
+                            <constraint firstItem="1gu-as-Ecb" firstAttribute="top" secondItem="cwH-Xh-1Mz" secondAttribute="bottom" constant="6" id="oqh-3U-qNx"/>
+                            <constraint firstItem="1gu-as-Ecb" firstAttribute="top" secondItem="oWs-Bc-iDl" secondAttribute="bottom" constant="6" id="rkJ-ez-IQ8"/>
+                            <constraint firstItem="cwH-Xh-1Mz" firstAttribute="leading" secondItem="oWs-Bc-iDl" secondAttribute="trailing" constant="33" id="tmS-tx-zNl"/>
+                            <constraint firstAttribute="trailing" secondItem="6bh-tx-k1m" secondAttribute="trailing" constant="48" id="yXp-28-xk6"/>
+                        </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="tkg-WO-5Im"/>
+                    <size key="freeformSize" width="320" height="568"/>
+                    <connections>
+                        <outlet property="backgroundImageView" destination="ALc-ui-ADH" id="Kxt-lx-EOz"/>
+                        <segue destination="ccU-bl-1oC" kind="custom" identifier="openTreffDetailView" customClass="BlurryModalSegue" id="TBA-Hc-Q7e"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="427" y="118"/>
+        </scene>
+        <!--Treff Liste View Controller-->
+        <scene sceneID="f4O-8I-WQh">
+            <objects>
+                <viewController id="lfy-hu-tks" customClass="TreffListeViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="eMm-Hn-lLR"/>
+                        <viewControllerLayoutGuide type="bottom" id="cHx-Be-U2M"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="b96-Oy-xcx">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qT5-uf-B3Q" userLabel="Help Button">
+                                <rect key="frame" x="133" y="509" width="53" height="53"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="hilfe_button-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="hilfeButtonPressed:" destination="lfy-hu-tks" eventType="touchUpInside" id="72s-Zn-F5w"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dxM-e5-Tqf" userLabel="Agenda Button">
+                                <rect key="frame" x="219" y="509" width="53" height="53"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="geschehen_button-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="agendaButtonPressed:" destination="lfy-hu-tks" eventType="touchUpInside" id="nYb-8R-R13"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pSF-mJ-0gH" userLabel="Treff Liste View Controller">
+                                <rect key="frame" x="48" y="509" width="53" height="53"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="liste_button-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="treffListeButtonPressed:" destination="lfy-hu-tks" eventType="touchUpInside" id="POd-B8-t4a"/>
+                                </connections>
+                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="33" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="QRz-4F-fHY">
+                                <rect key="frame" x="25" y="82" width="275" height="419"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <sections/>
+                                <connections>
+                                    <outlet property="dataSource" destination="lfy-hu-tks" id="A9t-jC-63u"/>
+                                    <outlet property="delegate" destination="lfy-hu-tks" id="17Z-aj-I4z"/>
+                                </connections>
+                            </tableView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="AgendaHeader-568" translatesAutoresizingMaskIntoConstraints="NO" id="hd9-ai-Md1" userLabel="Header ImageView">
+                                <rect key="frame" x="0.0" y="20" width="320" height="62"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="LISTE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HAh-iP-80V" userLabel="Header Label">
+                                <rect key="frame" x="0.0" y="35" width="320" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <color key="textColor" red="0.9960784912109375" green="0.99215692281723022" blue="0.99215692281723022" alpha="1" colorSpace="deviceRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </view>
+                    <navigationItem key="navigationItem" id="nQQ-qt-Mfa"/>
+                    <connections>
+                        <outlet property="headerLabel" destination="HAh-iP-80V" id="WQr-Yt-GGV"/>
+                        <outlet property="tableView" destination="QRz-4F-fHY" id="M2r-k7-sme"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2lU-fc-XOj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1120" y="-611"/>
+        </scene>
+        <!--Loading Screen View Controller-->
+        <scene sceneID="cxp-cE-P3d">
+            <objects>
+                <viewController id="tfB-Xt-beb" customClass="LoadingScreenViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="qy4-B5-Kli"/>
+                        <viewControllerLayoutGuide type="bottom" id="EOV-O7-T9X"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="bdA-cr-lZQ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hh0-Au-P5W">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="GVR-JT-w1o"/>
+                    <connections>
+                        <outlet property="backgroundImageView" destination="Hh0-Au-P5W" id="FYZ-pU-vJm"/>
+                        <segue destination="vXZ-lx-hvc" kind="push" identifier="openMapViewController" id="eLV-JT-xLZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qcN-R1-EDS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-115" y="124"/>
+        </scene>
+        <!--Treff Seite View Controller-->
+        <scene sceneID="6aU-MB-30c">
+            <objects>
+                <viewController id="ccU-bl-1oC" userLabel="Treff Seite View Controller" customClass="TreffSeiteViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="mrm-oD-jRJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="HuY-Tl-wdz"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="lgA-6o-HkF">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="b57-fA-ihy" userLabel="Background">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <gestureRecognizers/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="redraw" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Uo-6b-K6Y" userLabel="Club Banner">
+                                <rect key="frame" x="32" y="36" width="257" height="171"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vfh-QU-u0u" userLabel="Close Button">
+                                <rect key="frame" x="252" y="27" width="46" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="closeButton-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="closeView:" destination="ccU-bl-1oC" eventType="touchUpInside" id="vmR-ay-mJZ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tpg-xO-Wk7" userLabel="Website Button">
+                                <rect key="frame" x="53" y="522" width="26" height="26"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="WebsiteButton-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="openWebsite:" destination="ccU-bl-1oC" eventType="touchUpInside" id="HH1-SW-p4Z"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dwd-jz-TdC" userLabel="Facebook Button">
+                                <rect key="frame" x="93" y="522" width="26" height="26"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="FacebookButton-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="openFacebook:" destination="ccU-bl-1oC" eventType="touchUpInside" id="bxd-0t-gkx"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uwm-nd-zqM" userLabel="Email Button">
+                                <rect key="frame" x="174" y="522" width="26" height="26"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="EmailButon-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="openEmail:" destination="ccU-bl-1oC" eventType="touchUpInside" id="2d2-Ed-9RL"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v5g-Or-aue" userLabel="Phone Button">
+                                <rect key="frame" x="132" y="522" width="26" height="26"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="PhoneButton-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="openPhone:" destination="ccU-bl-1oC" eventType="touchUpInside" id="wkw-8t-Zg5"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yya-qJ-K56" userLabel="Map Button">
+                                <rect key="frame" x="227" y="412" width="19" height="19"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="ShowInMapsButton-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="abcdefghijklmnopqrstuvwxyzabcdefghij" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="221" translatesAutoresizingMaskIntoConstraints="NO" id="3Tu-vT-Q3Y" userLabel="Club Name Label">
+                                <rect key="frame" x="50" y="221" width="221" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                <color key="textColor" red="0.9960784912109375" green="0.99215692281723022" blue="0.99215692281723022" alpha="1" colorSpace="deviceRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="City" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ogY-x2-kFW" userLabel="City Label">
+                                <rect key="frame" x="53" y="264" width="218" height="27"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="0.99607849120000003" green="0.99215692280000001" blue="0.99215692280000001" alpha="1" colorSpace="deviceRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Adresse" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uon-H2-oEe" userLabel="Addresse Label">
+                                <rect key="frame" x="170" y="413" width="53" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="0.9960784912109375" green="0.99215692281723022" blue="0.99215692281723022" alpha="1" colorSpace="deviceRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Öffnungszeiten" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xkq-Qq-z5y" userLabel="Öffnungszeiten Label">
+                                <rect key="frame" x="53" y="413" width="97" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="0.99607849120000003" green="0.99215692280000001" blue="0.99215692280000001" alpha="1" colorSpace="deviceRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="HuY-Tl-wdz" firstAttribute="top" secondItem="uwm-nd-zqM" secondAttribute="bottom" constant="20" id="4jm-NA-0XW"/>
+                            <constraint firstItem="HuY-Tl-wdz" firstAttribute="top" secondItem="v5g-Or-aue" secondAttribute="bottom" constant="20" id="Tjj-vi-Qsi"/>
+                            <constraint firstItem="HuY-Tl-wdz" firstAttribute="top" secondItem="Dwd-jz-TdC" secondAttribute="bottom" constant="20" id="WCh-aY-NGl"/>
+                            <constraint firstItem="HuY-Tl-wdz" firstAttribute="top" secondItem="tpg-xO-Wk7" secondAttribute="bottom" constant="20" id="c5e-cd-Pbw"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="backgroundImageView" destination="b57-fA-ihy" id="YWh-t4-PGQ"/>
+                        <outlet property="cityLabel" destination="ogY-x2-kFW" id="YyM-20-hj7"/>
+                        <outlet property="closeButton" destination="vfh-QU-u0u" id="ZHX-Td-AaX"/>
+                        <outlet property="emailButton" destination="uwm-nd-zqM" id="sYR-Ko-RCN"/>
+                        <outlet property="facebookButton" destination="Dwd-jz-TdC" id="uea-pP-Idp"/>
+                        <outlet property="nameLabel" destination="3Tu-vT-Q3Y" id="px7-OT-gO2"/>
+                        <outlet property="phoneButton" destination="v5g-Or-aue" id="IGx-D7-x3N"/>
+                        <outlet property="showInMapsButton" destination="Yya-qJ-K56" id="rYJ-ze-hlM"/>
+                        <outlet property="websiteButton" destination="tpg-xO-Wk7" id="U01-Ay-dBx"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="o4o-hR-FaO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="427" y="-611"/>
+        </scene>
+        <!--Hilfe Pop Up View Controller-->
+        <scene sceneID="j33-9k-Xsl">
+            <objects>
+                <viewController id="2F6-nR-Czs" customClass="HilfePopUpViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="NXG-St-cbT"/>
+                        <viewControllerLayoutGuide type="bottom" id="W8R-mt-WgJ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="gmb-Na-8XJ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gtV-ji-g4I" userLabel="Background">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6qU-3m-10z" userLabel="Hilfe/Close Button">
+                                <rect key="frame" x="133" y="509" width="53" height="53"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="hilfe_button-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="closeView:" destination="2F6-nR-Czs" eventType="touchUpInside" id="aB2-Kn-nru"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZSi-Me-pDx" userLabel="Agenda Button">
+                                <rect key="frame" x="219" y="509" width="53" height="53"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="geschehen_button-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="agendaButtonPressed:" destination="2F6-nR-Czs" eventType="touchUpInside" id="tNk-ts-iSA"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pCq-Nu-rWz" userLabel="Club List Button">
+                                <rect key="frame" x="48" y="509" width="53" height="53"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="liste_button-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="treffListeButtonPressed:" destination="2F6-nR-Czs" eventType="touchUpInside" id="w2O-J5-Znf"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                    </view>
+                    <navigationItem key="navigationItem" id="WES-aH-f7H"/>
+                    <connections>
+                        <outlet property="background" destination="gtV-ji-g4I" id="8YU-tW-Aai"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QTT-TF-KGX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1120" y="124"/>
+        </scene>
+        <!--Agenda Liste View Controller-->
+        <scene sceneID="guu-Rh-6BD">
+            <objects>
+                <viewController id="ySg-Yt-XeF" customClass="AgendaListeViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="W10-vV-ofv"/>
+                        <viewControllerLayoutGuide type="bottom" id="PTg-bM-f2P"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="evh-cy-0yz">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="62" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="i9z-jT-5TK" userLabel="Event List Table View">
+                                <rect key="frame" x="29" y="133" width="262" height="435"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="ySg-Yt-XeF" id="lT0-fR-kOX"/>
+                                    <outlet property="delegate" destination="ySg-Yt-XeF" id="eEr-YW-bWQ"/>
+                                </connections>
+                            </tableView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="33" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="1Xx-hd-yGc" userLabel="Filter Table View">
+                                <rect key="frame" x="0.0" y="135" width="320" height="0.0"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" id="IcK-8E-5iy"/>
+                                </constraints>
+                                <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="ySg-Yt-XeF" id="aFF-Ys-9Qf"/>
+                                    <outlet property="delegate" destination="ySg-Yt-XeF" id="sqj-DR-GVE"/>
+                                </connections>
+                            </tableView>
+                            <imageView clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AgendaHeader-568" translatesAutoresizingMaskIntoConstraints="NO" id="DHI-N2-uiT">
+                                <rect key="frame" x="0.0" y="20" width="320" height="78"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZbB-FG-Mpd">
+                                <rect key="frame" x="0.0" y="100" width="320" height="33"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="DropDownFilterButton-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="filterButtonPressed:" destination="ySg-Yt-XeF" eventType="touchUpInside" id="goE-pJ-zu1"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alle ausgewählt" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aPv-5b-PZX">
+                                <rect key="frame" x="0.0" y="106" width="320" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Agenda" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jzP-W9-Ack">
+                                <rect key="frame" x="61" y="26" width="187" height="65"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="54"/>
+                                <color key="textColor" red="0.9960784912109375" green="0.99215692281723022" blue="0.99215692281723022" alpha="1" colorSpace="deviceRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KPR-th-DkK">
+                                <rect key="frame" x="256" y="57" width="44" height="15"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="15" id="k2V-Qd-J9h"/>
+                                    <constraint firstAttribute="width" constant="44" id="w5K-dQ-6p5"/>
+                                </constraints>
+                                <state key="normal" image="AgendaNaviButton-568">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="closeView:" destination="ySg-Yt-XeF" eventType="touchUpInside" id="e7b-SH-qrg"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="i9z-jT-5TK" firstAttribute="top" secondItem="aPv-5b-PZX" secondAttribute="bottom" constant="6" id="5He-0j-8Sy"/>
+                            <constraint firstItem="1Xx-hd-yGc" firstAttribute="top" secondItem="aPv-5b-PZX" secondAttribute="bottom" constant="8" symbolic="YES" id="5tM-7h-c1B"/>
+                            <constraint firstItem="ZbB-FG-Mpd" firstAttribute="top" secondItem="DHI-N2-uiT" secondAttribute="bottom" constant="2" id="6vK-Nf-ALN"/>
+                            <constraint firstItem="1Xx-hd-yGc" firstAttribute="trailing" secondItem="aPv-5b-PZX" secondAttribute="trailing" id="7AR-fb-OZW"/>
+                            <constraint firstItem="ZbB-FG-Mpd" firstAttribute="leading" secondItem="aPv-5b-PZX" secondAttribute="leading" id="Dvw-oe-5mH"/>
+                            <constraint firstItem="aPv-5b-PZX" firstAttribute="leading" secondItem="1Xx-hd-yGc" secondAttribute="leading" id="FZD-Bn-gnr"/>
+                            <constraint firstAttribute="bottom" secondItem="i9z-jT-5TK" secondAttribute="bottom" id="SDZ-bK-6Uu"/>
+                            <constraint firstItem="DHI-N2-uiT" firstAttribute="top" secondItem="evh-cy-0yz" secondAttribute="top" constant="20" symbolic="YES" id="WcD-b0-BPc"/>
+                            <constraint firstItem="ZbB-FG-Mpd" firstAttribute="trailing" secondItem="aPv-5b-PZX" secondAttribute="trailing" id="YAn-za-pIo"/>
+                            <constraint firstItem="KPR-th-DkK" firstAttribute="leading" secondItem="jzP-W9-Ack" secondAttribute="trailing" constant="8" symbolic="YES" id="ac7-Xq-6vp"/>
+                            <constraint firstAttribute="trailing" secondItem="KPR-th-DkK" secondAttribute="trailing" constant="20" symbolic="YES" id="anp-CC-Cpf"/>
+                            <constraint firstItem="ZbB-FG-Mpd" firstAttribute="top" secondItem="KPR-th-DkK" secondAttribute="bottom" constant="28" id="gbh-r9-0po"/>
+                            <constraint firstItem="aPv-5b-PZX" firstAttribute="top" secondItem="DHI-N2-uiT" secondAttribute="bottom" constant="8" symbolic="YES" id="hhq-6j-7h7"/>
+                            <constraint firstItem="jzP-W9-Ack" firstAttribute="leading" secondItem="evh-cy-0yz" secondAttribute="leading" constant="61" id="jtc-Sb-dbr"/>
+                            <constraint firstItem="aPv-5b-PZX" firstAttribute="leading" secondItem="DHI-N2-uiT" secondAttribute="leading" id="k8i-a7-LFZ"/>
+                            <constraint firstItem="KPR-th-DkK" firstAttribute="top" secondItem="W10-vV-ofv" secondAttribute="bottom" constant="37" id="pZE-sR-efL"/>
+                            <constraint firstItem="ZbB-FG-Mpd" firstAttribute="centerY" secondItem="aPv-5b-PZX" secondAttribute="centerY" id="qnb-eU-DIo"/>
+                            <constraint firstItem="jzP-W9-Ack" firstAttribute="top" secondItem="W10-vV-ofv" secondAttribute="bottom" constant="6" id="uAW-UH-eyE"/>
+                            <constraint firstItem="aPv-5b-PZX" firstAttribute="leading" secondItem="evh-cy-0yz" secondAttribute="leading" id="ucQ-oX-Wsx"/>
+                            <constraint firstItem="i9z-jT-5TK" firstAttribute="centerX" secondItem="1Xx-hd-yGc" secondAttribute="centerX" id="uxl-bf-7lT"/>
+                            <constraint firstItem="i9z-jT-5TK" firstAttribute="leading" secondItem="evh-cy-0yz" secondAttribute="leading" constant="29" id="yT1-bn-5TK"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="wJC-Vt-Uny"/>
+                    <connections>
+                        <outlet property="closeButton" destination="KPR-th-DkK" id="liP-e5-PRe"/>
+                        <outlet property="filterButton" destination="ZbB-FG-Mpd" id="wa1-MY-uDy"/>
+                        <outlet property="filterButtonTextLabel" destination="aPv-5b-PZX" id="Dy4-5X-a59"/>
+                        <outlet property="filterTableView" destination="1Xx-hd-yGc" id="EnQ-h4-bui"/>
+                        <outlet property="headerTitle" destination="jzP-W9-Ack" id="4nf-jv-XUh"/>
+                        <outlet property="tableView" destination="i9z-jT-5TK" id="6Pz-Xa-WXW"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hEk-sy-mqG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1120" y="820"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="AgendaHeader-568" width="320" height="81"/>
+        <image name="AgendaNaviButton-568" width="44" height="14"/>
+        <image name="DropDownFilterButton-568" width="320" height="33"/>
+        <image name="EmailButon-568" width="27" height="26"/>
+        <image name="FacebookButton-568" width="26" height="26"/>
+        <image name="PhoneButton-568" width="26" height="26"/>
+        <image name="ShowInMapsButton-568" width="18" height="18"/>
+        <image name="WebsiteButton-568" width="26" height="26"/>
+        <image name="closeButton-568" width="46" height="46"/>
+        <image name="geschehen_button-568" width="53" height="53"/>
+        <image name="hilfe_button-568" width="53" height="53"/>
+        <image name="liste_button-568" width="53" height="53"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

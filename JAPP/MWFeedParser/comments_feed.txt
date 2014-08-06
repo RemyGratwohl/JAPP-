@@ -1,0 +1,6 @@
+Use for converting HTML to plain text
+
+Downloaded from https://github.com/mwaterfall/MWFeedParser
+and striped to the basic functions
+
+License: Custom, see LicenseClock.txt

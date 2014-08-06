@@ -1,0 +1,12 @@
+BlurryModalSegue is a UIStoryboardSegue subclass that provides a blur effect for modal storyboard segues.  It provides the look and feel of a transparent modal overlay without deviating from the modal presentation model provided by Apple.
+
+Downloaded from https://github.com/Citrrus/BlurryModalSegue and
+
+License: MIT, see LicenseBlurry.txt
+
+The blur effect in this library is courtesy of the [UIImage-BlurredFrame](https://github.com/Adrian2112/UIImage-BlurredFrame) library.
+
+
+
+
+
