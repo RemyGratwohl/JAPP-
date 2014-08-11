@@ -10,7 +10,11 @@
 
 @interface NewsItem : BaseItem
 
-@property NSString *itemSummary;
-@property NSString *itemAuthorName;
+@property NSString *title;
+@property NSString *summary;
+@property NSString *authorName;
+@property NSNumber *clubReferenceID;
+
+- (NSDate*) convertLongNumberToDate:(NSNumber *)dateLong;
 
 @end

@@ -10,7 +10,7 @@
 
 @interface TreffListeCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UIImageView *backgroundIMage;
+@property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
 @property (weak, nonatomic) IBOutlet UILabel *clubNameLabel;
 
 @end

@@ -23,4 +23,17 @@
     
 }
 
++(ItemType)itemTypeFromString:(NSString*)string{
+    if([string isEqualToString:@"Location"]){
+        return LOCATION;
+    }else if([string isEqualToString:@"Event"]){
+        return EVENT;
+    }else if([string isEqualToString:@"Post"]){
+        return NEWS;
+    }else{
+        NSLog(@"Unable to Convert String:\"%@\" to an ItemType",string);
+        return -1;
+    }
+}
+
 @end

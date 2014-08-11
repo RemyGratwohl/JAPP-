@@ -7,10 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Common.h"
 
 @interface CommonFunctions : NSObject
 
 +(void)setResolutionFriendlyImageNamed:(NSString*)imageName forImageView:(UIImageView*)imageView;
++(ItemType)itemTypeFromString:(NSString*)string;
 
 @end
 

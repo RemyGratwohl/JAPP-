@@ -16,6 +16,7 @@
     if (self) {
         // Initialization code
     }
+    
     return self;
 }
 
@@ -32,7 +33,7 @@
 }
 
 - (IBAction)openFacebookPage:(id)sender {
-    NSLog(@"OK!");
+
 }
 
 - (IBAction)openWebsite:(id)sender {

@@ -26,7 +26,13 @@
 // Labels
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *cityLabel;
+@property (weak, nonatomic) IBOutlet UITextView *openingTimesLabel;
+@property (weak, nonatomic) IBOutlet UILabel *countryLabel;
+@property (weak, nonatomic) IBOutlet UILabel *cityLabel2;
+@property (weak, nonatomic) IBOutlet UILabel *postalCodeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *address1Label;
 
-
+// Images
+@property (weak, nonatomic) IBOutlet UIImageView *bannerImage;
 
 @end

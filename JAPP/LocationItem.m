@@ -11,8 +11,10 @@
 
 @implementation LocationItem
 
-- (NSString *)description {
-    return [NSString stringWithFormat: @"\nName=%@\nID=%@\nIsGlobal?=%hhu\nAddress1=%@\nAddress2=%@\nPostalCode=%@\nPlace=%@\nCountry=%@\nPhone=%@\nFax=%@\nEmail=%@\nType=%@\nPosX=%d\nPosY=%d\nSiteURL=%@\n", self.name,self.ID,self.isGlobal,self.address1,self.address2,self.postalCode,self.place,self.country,self.phoneNumber,self.fax,self.email,self.type,self.posX,self.posY,self.siteURL];
+- (NSString *)descript {
+    return [NSString stringWithFormat: @"\nName=%@\nID=%@\nIsGlobal?=%hhu\nAddress1=%@\nAddress2=%@\nPostalCode=%@\nPlace=%@\nCountry=%@\nPhone=%@\nFax=%@\nEmail=%@\nType=%@\nPosX=%d\nPosY=%d\nSiteURL=%@\nHours=%@\n", self.name,self.ID,self.isGlobal,self.address1,self.address2,self.postalCode,self.place,self.country,self.phoneNumber,self.fax,self.email,self.type,self.posX,self.posY,self.siteURL,self.hoursOfOperation];
 }
+
+
 
 @end

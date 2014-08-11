@@ -11,11 +11,9 @@
 #import "AgendaListeDetailCell.h"
 #import "FilterListeCell.h"
 #import "EventItem.h"
+#import "LocationItem.h"
 
 @interface AgendaListeViewController ()
-
-@property(strong,nonatomic)NSMutableArray *data;
-@property(strong,nonatomic)NSMutableArray *filterData;
 
 @end
 
@@ -34,14 +32,9 @@ bool isFilterViewOpen = false;
     [super viewDidLoad];
     
     // Do any additional setup after loading the view.
-    self.data = [[NSMutableArray alloc] init];
-    self.filterData = [[NSMutableArray alloc] init];
-    
-    [self populateData];
-    
     [self.tableView setContentInset:UIEdgeInsetsMake(2,0,0,0)];
-    
-    
+
+    // Register Nibs for Cells
     [self.tableView       registerNib: [UINib nibWithNibName:@"AgendaListeDetailCell" bundle:nil] forCellReuseIdentifier:@"AgendaListeDetailCell"];
     [self.tableView       registerNib: [UINib nibWithNibName:@"AgendaListeCell" bundle:nil]       forCellReuseIdentifier:@"AgendaListeCell"];
     [self.filterTableView registerNib: [UINib nibWithNibName:@"FilterListeCell" bundle:nil]       forCellReuseIdentifier:@"FilterListeCell"];
@@ -63,9 +56,13 @@ bool isFilterViewOpen = false;
                                 
                                  self.filterTableView.hidden = false;
                                  [self.filterButton setImage:[UIImage imageNamed:@"DropDownFilterButtonActive-568"] forState:UIControlStateNormal];
-                                 
-                                 [self changeHeightOf : self.filterTableView to: 323];
-                                 [self changeYOriginOf: self.tableView       to: 458];
+
+                                 int newHeight = self.filterTableView.frame.origin.y + [self.locations count] * FILTER_TABLEVIEW_ROW_HEIGHT;
+                                 //32
+                                 [self changeHeightOf : self.filterTableView to: newHeight];
+                                 int newTableViewHeight = self.filterTableView.frame.origin.y + [self.locations count] * FILTER_TABLEVIEW_ROW_HEIGHT;
+                                 //458
+                                 [self changeYOriginOf: self.tableView       to: newTableViewHeight];
                                  
                              }else{
                                  //Hide the FilterTableView
@@ -82,9 +79,13 @@ bool isFilterViewOpen = false;
                                  [self openFilterView];
                                  
                                  //Make sure animation did occur
-                                 [self changeHeightOf : self.filterTableView to: 323];
-                                 [self changeYOriginOf: self.tableView       to: 458];
- 
+                                 
+                                 int newHeight = self.filterTableView.frame.origin.y + [self.locations count] * FILTER_TABLEVIEW_ROW_HEIGHT;
+                                 //32
+                                 [self changeHeightOf : self.filterTableView to: newHeight];
+                                 int newTableViewHeight = self.filterTableView.frame.origin.y + [self.locations count] * FILTER_TABLEVIEW_ROW_HEIGHT;
+                                 //458
+                                 [self changeYOriginOf: self.tableView       to: newTableViewHeight];
                                  
                              }else if (finished && isFilterViewOpen){
                                  [self closeFilterView];
@@ -128,19 +129,19 @@ bool isFilterViewOpen = false;
 {
     // Return the number of rows in the section.
     if(tableView == self.tableView){
-        return [self.data count];
+        return [self.events count];
     }else{
-        return [self.filterData count];
+        return [self.locations count];
     }
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     if(tableView == self.tableView){
-        if([[self.data objectAtIndex:indexPath.row] isKindOfClass:[@"" class]]){
+        if([[self.events objectAtIndex:indexPath.row] isKindOfClass:[@"" class]]){
             
             AgendaListeDetailCell *newCell;
-            EventItem *newEvent = [self.data objectAtIndex:[indexPath row] - 1];
+            EventItem *newEvent = [self.events objectAtIndex:[indexPath row] - 1];
 
         
             newCell = [tableView dequeueReusableCellWithIdentifier:@"AgendaListeDetailCell"];
@@ -149,15 +150,19 @@ bool isFilterViewOpen = false;
                 newCell.facebookButton.enabled = false;
            // }
             
-            newCell.descriptionLabel.text = newEvent.description;
+            newCell.descriptionLabel.text = newEvent.descript;
             
             return newCell;
         }else{
             AgendaListeCell *newCell;
             newCell = [tableView dequeueReusableCellWithIdentifier:@"AgendaListeCell"];
             
-           // Event *newEvent = [self.data objectAtIndex:[indexPath row]];
-          //  newCell.nameLabel.text = newEvent.name;
+           EventItem *newEvent = [self.events objectAtIndex:[indexPath row]];
+            newCell.nameLabel.text = newEvent.title;
+            
+            NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:newEvent.startDate];
+
+            newCell.dateLabel.text = [NSString stringWithFormat:@"%d",[components day]];
            // newCell.dateLabel.text = newEvent.date;
            // newCell.timeAndLocationLabel.text = [NSString stringWithFormat:@"%@, %@",newEvent.time,newEvent.location];
             
@@ -169,14 +174,15 @@ bool isFilterViewOpen = false;
     }else{
         
         FilterListeCell *newCell = [self.filterTableView dequeueReusableCellWithIdentifier:@"FilterListeCell"];
-        newCell.txtLabel.text = [self.filterData objectAtIndex:indexPath.row];
+        LocationItem *item = [self.locations objectAtIndex:indexPath.row];
+        newCell.txtLabel.text = item.name;
         return newCell;
     }
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath{
     
-    if([[self.data objectAtIndex:indexPath.row] isKindOfClass:[@"" class]]){
+    if([[self.events objectAtIndex:indexPath.row] isKindOfClass:[@"" class]]){
         return nil;
     }
     
@@ -194,11 +200,11 @@ bool isFilterViewOpen = false;
         
         cell.backgroundImage.image = [UIImage imageNamed:@"AgendaListeCellSelected-568"];
 
-        if([self.data containsObject:@"detail"]){
+        if([self.events containsObject:@"detail"]){
              
              // Remove Detail Cell
-            newIndexPath = [NSIndexPath indexPathForRow:[self.data indexOfObject:@"detail"] inSection:0];
-            [self.data removeObject:@"detail"];
+            newIndexPath = [NSIndexPath indexPathForRow:[self.events indexOfObject:@"detail"] inSection:0];
+            [self.events removeObject:@"detail"];
             [self.tableView beginUpdates];
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             [self.tableView endUpdates];
@@ -211,7 +217,11 @@ bool isFilterViewOpen = false;
          }
         
         //Add the Detail Cell under the original Cell
-        [self.data insertObject:@"detail" atIndex: [[self.tableView indexPathForCell:cell] row] + 1];
+ 
+        
+        
+        
+        [self.events insertObject:@"detail" atIndex: [[self.tableView indexPathForCell:cell] row] + 1];
         NSIndexPath *newDetailCellIndexPath = [NSIndexPath indexPathForRow:[[self.tableView indexPathForCell:cell] row] + 1 inSection:0];
         [self.tableView beginUpdates];
         [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newDetailCellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -246,20 +256,10 @@ bool isFilterViewOpen = false;
         return FILTER_TABLEVIEW_ROW_HEIGHT ;
     }
     
-    if([[self.data objectAtIndex:indexPath.row] isKindOfClass:[@"" class]]){
+    if([[self.events objectAtIndex:indexPath.row] isKindOfClass:[@"" class]]){
         return AGENDA_TABLEVIEW_DETAIL_ROW_HEIGHT;
     }else{
         return AGENDA_TABLEVIEW_NORMAL_ROW_HEIGHT;
-    }
-}
-
-
--(void)populateData{
-    NSURL *file = [[NSBundle mainBundle] URLForResource:@"Map_Icons" withExtension:@"plist"]; //Lets get the file location
-    NSDictionary *plistContent = [NSDictionary dictionaryWithContentsOfURL:file];
-    
-    for(NSString *key in plistContent){
-        [self.filterData addObject:key];
     }
 }
 

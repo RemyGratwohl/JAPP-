@@ -16,7 +16,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *phoneButton;
 
 // Labels
-@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+@property (weak, nonatomic) IBOutlet UITextView *descriptionLabel;
 
 
 @end

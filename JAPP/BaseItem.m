@@ -10,22 +10,21 @@
 
 @implementation BaseItem
 
-/*
 -(void)encodeWithCoder:(NSCoder *)encoder{
-    [encoder encodeObject:self.itemId forKey:@"id"];
-    [encoder encodeObject:self.itemName forKey:@"name"];
-    [encoder encodeObject:self.itemDetail forKey:@"detail"];
+    [encoder encodeObject:self.ID forKey:@"ID"];
+    [encoder encodeObject:self.siteURL forKey:@"siteURL"];
+    [encoder encodeObject:self.descript forKey:@"descript"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
     
     if (self = [super init]) {
-        self.itemId = [decoder decodeObjectForKey:@"id"];
-        self.itemName = [decoder decodeObjectForKey:@"name"];
-        self.itemDetail = [decoder decodeObjectForKey:@"detail"];
+        self.ID = [decoder decodeObjectForKey:@"ID"];
+        self.siteURL = [decoder decodeObjectForKey:@"siteURL"];
+        self.descript = [decoder decodeObjectForKey:@"descript"];
     }
     return self;
 }
-*/
+
 
 @end

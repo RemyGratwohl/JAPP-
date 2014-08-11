@@ -14,13 +14,16 @@
 
 @end
 
-
 @implementation TreffListeViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     [self.tableView registerNib:[UINib nibWithNibName:@"TreffListeCell" bundle:nil] forCellReuseIdentifier:@"TreffListeCell"];
+    
+    if(self.locationList == NULL){
+        NSLog(@"Location List is Null");
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -55,8 +58,13 @@
 }
 
 - (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath {
+    
+    TreffListeCell *cell = (TreffListeCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    cell.backgroundImageView.image = [UIImage imageNamed:@"DropDownFilterButtonSelected-568"];
+    
+    
     [self dismissViewControllerAnimated:YES completion:^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"openTreffDetailView" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"openTreffDetailView" object:[self.locationList objectAtIndex:indexPath.row]];
     }];
 }
 

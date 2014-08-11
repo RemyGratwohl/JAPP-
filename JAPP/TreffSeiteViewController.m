@@ -26,6 +26,12 @@
     NSLog(@"%@",self.selectedLocation);
     [self.nameLabel setText:self.selectedLocation.name];
     [self.cityLabel setText:self.selectedLocation.place];
+    self.openingTimesLabel.text = self.selectedLocation.hoursOfOperation;
+    [self.countryLabel setText:self.selectedLocation.country];
+    [self.address1Label setText:self.selectedLocation.address1];
+    [self.postalCodeLabel setText:self.selectedLocation.postalCode];
+    
+    [self.bannerImage setImage:self.selectedLocation.bannerImage];
     
     if([self.selectedLocation.siteURL  isEqual: @""]){
         self.websiteButton.enabled = false;
@@ -51,22 +57,36 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark Button Event Listeners
 - (IBAction)openWebsite:(id)sender {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString: self.selectedLocation.siteURL]];
 }
+
 - (IBAction)openPhone:(id)sender {
-    //[[UIApplication sharedApplication] openURL:self.currentTreff.telephoneNumber];
+    NSURL *url = [NSURL URLWithString: [NSString stringWithFormat: @"tel:%@",self.selectedLocation.phoneNumber]];
+    [[UIApplication sharedApplication] openURL:url];
 }
 
-
 - (IBAction)openEmail:(id)sender {
-    NSString *url = [NSURL URLWithString: self.selectedLocation.email];
-    [[UIApplication sharedApplication]  openURL: [NSURL URLWithString: url]];
+    NSURL *url = [NSURL URLWithString: [NSString stringWithFormat: @"mailto:%@",self.selectedLocation.email]];
+    [[UIApplication sharedApplication]  openURL: url];
 }
 
 - (IBAction)openFacebook:(id)sender {
+    NSURL *url = [NSURL URLWithString: [NSString stringWithFormat: @"fb:%@",self.selectedLocation.facebookURL]];
+    BOOL isInstalled = [[UIApplication sharedApplication] canOpenURL:url];
+    if(isInstalled){
+        [[UIApplication sharedApplication]  openURL: url];
+    }else{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.selectedLocation.facebookURL]];
+    }
 }
 
+- (IBAction)openMapsInBrowser:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.selectedLocation.mapURL]];
+}
+
+#pragma mark Gesture Recogonizer
 
 -(void)setSwipeGestureDirection:(UISwipeGestureRecognizerDirection)direction numberOfTocuhesRequired:(int)num{
     

@@ -7,15 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Common.h"
 
 @class ServerManager;
 
 @protocol ServerLoadFinishedDelegate <NSObject>
 @required
 
-- (void) didFinishLoadingLocations: (NSMutableArray *)locations;
-- (void) didFinishLoadingEvents:    (NSMutableArray *)events;
-- (void) didFinishLoadingNews:      (NSMutableArray *)news;
+-(void) didFinishLoadingItems: (NSMutableArray *)items ofType: (ItemType)type;
+
 @end
 
 @interface ServerManager : NSObject <NSURLConnectionDelegate> {
@@ -23,6 +23,8 @@
 @private
     NSMutableData * responseData;
 }
+
+- (NSMutableArray *) decodeJSONItems:(NSDictionary *) resJson;
 
 // Server Manger is stateless
 @property (nonatomic, weak) id <ServerLoadFinishedDelegate> delegate;

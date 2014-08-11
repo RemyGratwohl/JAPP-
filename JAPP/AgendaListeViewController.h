@@ -15,6 +15,7 @@ extern const float FILTER_TABLEVIEW_ROW_HEIGHT;
 extern const float AGENDA_TABLEVIEW_NORMAL_ROW_HEIGHT;
 extern const float AGENDA_TABLEVIEW_DETAIL_ROW_HEIGHT;
 
+
 // TableViews
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITableView *filterTableView;
@@ -26,5 +27,10 @@ extern const float AGENDA_TABLEVIEW_DETAIL_ROW_HEIGHT;
 // Labels
 @property (weak, nonatomic) IBOutlet UILabel *filterButtonTextLabel;
 @property (weak, nonatomic) IBOutlet UILabel *headerTitle;
+
+// Data
+@property (strong,nonatomic) NSArray *locations;
+@property (strong,nonatomic) NSMutableArray *events;
+
 
 @end

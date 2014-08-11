@@ -11,10 +11,12 @@
 #import "Common.h"
 #import "LocationItem.h"
 #import "NSString+HTML.h"
+#import "CommonFunctions.h"
+#import "NewsItem.h"
+#import "EventItem.h"
 
 @interface ServerManager()
-
-
+    @property ItemType type;
 @end
 
 @implementation ServerManager
@@ -43,6 +45,7 @@
             [request setHTTPBody: [serverEventsQueryString dataUsingEncoding:NSASCIIStringEncoding]];
             break;
         case(NEWS):
+
             [request setHTTPBody: [serverNewsQueryString dataUsingEncoding:NSASCIIStringEncoding]];
             break;
     }
@@ -60,7 +63,6 @@
     // so that we can append data to it in the didReceiveData method
     // Furthermore, this method is called each time there is a redirect so reinitializing it
     // also serves to clear it
-    
     responseData = [[NSMutableData alloc] init];
 }
 
@@ -83,26 +85,39 @@
     // The request is complete and data has been received
     // You can parse the stuff in your instance variable now
     
-    //convert to JSON
+    //convert to JSONs
     NSError *myError = nil;
     NSDictionary *resJson = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&myError];
     
+    if(myError == nil){
+        
+        // Determine and Archive the type
+        NSString *type = [self determineTypeOfJSONString:resJson];
+        NSLog(@"Saving resJSON of Type:%@",type);
+        
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectoryPath = [paths objectAtIndex:0];
+        NSString *filePath = [documentsDirectoryPath stringByAppendingPathComponent:type];
+        
+        [NSKeyedArchiver archiveRootObject:resJson toFile:filePath];
+
+    }
+    
     NSMutableArray *items = [self decodeJSONItems:resJson];
-    [self.delegate didFinishLoadingLocations:items];
+    [self.delegate didFinishLoadingItems:items ofType:self.type];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     // The request has failed for some reason!
     // Check the error var
-    
     NSLog(@"Connection to server failed: %@; %@", error.localizedDescription, error.localizedFailureReason);
 }
 
-- (NSMutableArray *) decodeJSONItems:(NSDictionary *) resJson {
-    
+- (NSMutableArray *) decodeJSONItems:(NSDictionary *) resJson{
+    // Array of items to return
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
-    //Search all values
+    //Search through the values
     for(id key in resJson) {
         
         id value = [resJson objectForKey:key];
@@ -113,83 +128,142 @@
             // Ignore
         } else if ([keyAsString isEqualToString:@"message"]) {
             // Ignore
-            
         } else if ([keyAsString isEqualToString:@"items"]) {
             
             NSArray *tempItems = (NSArray *)value;
             
-            for (id keyValuePair in tempItems) { // id detailItem
+            // For each object in items
+            for (id keyValuePair in tempItems) {
                 
-                
+                // Create a Dictionary of the Object's Properties
                 NSDictionary *detailsDict  = (NSDictionary *) keyValuePair;
                 
-                LocationItem *lItem = [[LocationItem alloc] init];
-                [items addObject:lItem];
- 
-                for(id key2 in detailsDict) {
-                    
-                    NSString *keyString2 = (NSString *)key2;
-                    id value2 = [detailsDict objectForKey:keyString2];
-                    
-                    if ([keyString2 isEqualToString:@"BOOL"]) {
-                        lItem.isGlobal = [[value2 objectForKey:@"isGlobal"] boolValue];
-                    } else if ([keyString2 isEqualToString:@"SHORT_TEXT"]) {
-                        lItem.name = [value2 objectForKey:@"name"];
-                        lItem.address1 = [value2 objectForKey:@"address1"];
-                        lItem.address2 = [value2 objectForKey:@"address2"];
-                        lItem.postalCode = [value2 objectForKey:@"postalCode"];
-                        lItem.place = [value2 objectForKey:@"place"];
-                        lItem.country = [value2 objectForKey:@"country"];
-                        lItem.phoneNumber = [value2 objectForKey:@"phone"];
-                        lItem.fax = [value2 objectForKey:@"fax"];
-                        lItem.email = [value2 objectForKey:@"email"];
-                        lItem.type = [value2 objectForKey:@"type"];
-                    }else if ([keyString2 isEqualToString:@"LONG_TEXT"]) {
-                        lItem.description = [[value2 objectForKey:@"description"] stringByConvertingHTMLToPlainText];
-                    }else if ([keyString2 isEqualToString:@"HYPERLINK"]) {
-                        lItem.siteURL = [value2 objectForKey:@"siteUrl"];
-                        lItem.facebookURL = [value2 objectForKey:@"facebookUrl"];
-                        
-                    }else if ([keyString2 isEqualToString:@"IMAGE"]) {
-                        
-                    }else if ([keyString2 isEqualToString:@"INT"]){
-                        
-                        lItem.posX = [[value2 objectForKey:@"posX"] integerValue];
-                        lItem.posY = [[value2 objectForKey:@"posY"] integerValue];
-                    /*
-                    } else if ([keyString2 isEqualToString:@"IMAGE"]) {
-                        NSDictionary *imageDateDict  = (NSDictionary *) value2;
-                        NSString *imageName = (NSString *) [imageDateDict objectForKey:@"image"];
-                        mailItem.imageRemoteName = imageName;
-                     */
-                        
-                    } else if ([keyString2 isEqualToString:@"itemId"]) {
-                        lItem.ID= [detailsDict objectForKey:@"itemId"];
-                        
-                    }
-                    
+                // Retrieve the Type for the Appropriate Delegate Callback
+                self.type = [CommonFunctions itemTypeFromString:[detailsDict objectForKey:@"itemType"]];
+                
+                if(self.type == LOCATION){
+                    [items addObject:[self createLocationFromDetailsDictionary:detailsDict]];
+                }else if(self.type == EVENT){
+                    [items addObject:[self createEventFromDetailsDictionary:detailsDict]];
+                }else if (self.type == NEWS){
+                    [items addObject:[self createNewsFromDetailsDictionary:detailsDict]];
                 }
-             
+                
             }
-            
         }
     }
     
-    /* LOG ITEMS
-    for(id obj in items){
-        NSLog(@"%@",[obj description]);
-    }
-    */
     return items;
 }
 
+-(NSString*)determineTypeOfJSONString:(NSDictionary *) resJson{
+    return [[resJson valueForKeyPath:@"items.itemType"] objectAtIndex:0];
+}
 
-- (UIImage *) loadImageFromURLwithName:(NSString *) imageName {
+-(LocationItem*)createLocationFromDetailsDictionary:(NSDictionary*)dict{
+    
+    LocationItem *lItem = [[LocationItem alloc] init];
+    
+    for(id key2 in dict) {
+        
+        NSString *keyString2 = (NSString *)key2;
+        id value2 = [dict objectForKey:keyString2];
+        
+        if ([keyString2 isEqualToString:@"BOOL"]) {
+            lItem.isGlobal = [[value2 objectForKey:@"isGlobal"] boolValue];
+        } else if ([keyString2 isEqualToString:@"SHORT_TEXT"]) {
+            lItem.name = [value2 objectForKey:@"name"];
+            lItem.address1 = [value2 objectForKey:@"address1"];
+            lItem.address2 = [value2 objectForKey:@"address2"];
+            lItem.postalCode = [value2 objectForKey:@"postalCode"];
+            lItem.place = [value2 objectForKey:@"place"];
+            lItem.country = [value2 objectForKey:@"country"];
+            lItem.phoneNumber = [value2 objectForKey:@"phone"];
+            lItem.fax = [value2 objectForKey:@"fax"];
+            lItem.email = [value2 objectForKey:@"email"];
+            lItem.type = [value2 objectForKey:@"type"];
+            lItem.phoneNumber = [value2 objectForKey:@"phone"];
+        }else if ([keyString2 isEqualToString:@"LONG_TEXT"]) {
+            lItem.descript = [[value2 objectForKey:@"description"] stringByConvertingHTMLToPlainText];
+            lItem.hoursOfOperation = [[value2 objectForKey:@"hoursOfOperation"] stringByConvertingHTMLToPlainText];
+        }else if ([keyString2 isEqualToString:@"HYPERLINK"]) {
+            lItem.siteURL = [value2 objectForKey:@"siteUrl"];
+            lItem.facebookURL = [value2 objectForKey:@"facebookUrl"];
+            lItem.mapURL = [value2 objectForKey:@"mapUrl"];
+            
+        }else if ([keyString2 isEqualToString:@"IMAGE"]) {
+            NSString *urlString = [NSString stringWithFormat:@"%@/Location_image/%@",imageURL,[value2 objectForKey:@"image"]];
+            lItem.bannerImage = [self loadImageFromURLwithName:urlString];
+        }else if ([keyString2 isEqualToString:@"INT"]){
+            
+            lItem.posX = [[value2 objectForKey:@"posX"] integerValue];
+            lItem.posY = [[value2 objectForKey:@"posY"] integerValue];
+            
+        } else if ([keyString2 isEqualToString:@"itemId"]) {
+            lItem.ID= [dict objectForKey:@"itemId"];
+            
+        }
+        
+    }
+    
+    return lItem;
+}
+
+-(NewsItem*)createNewsFromDetailsDictionary:(NSDictionary*)dict{
+    NewsItem *newNewsItem = [[NewsItem alloc] init];
+    
+    for(id key2 in dict) {
+        
+        NSString *keyString2 = (NSString *)key2;
+        id value2 = [dict objectForKey:keyString2];
+        
+       if ([keyString2 isEqualToString:@"SHORT_TEXT"]) {
+           newNewsItem.title = [value2 objectForKey:@"title"];
+        }else if ([keyString2 isEqualToString:@"LONG_TEXT"]) {
+            newNewsItem.descript = [[value2 objectForKey:@"description"] stringByConvertingHTMLToPlainText];
+        }else if ([keyString2 isEqualToString:@"HYPERLINK"]) {
+            newNewsItem.siteURL = [value2 objectForKey:@"siteLink"];
+        }else if ([keyString2 isEqualToString:@"IMAGE"]) {
+        } else if ([keyString2 isEqualToString:@"itemId"]) {
+            newNewsItem.ID= [dict objectForKey:@"itemId"];
+        }
+        
+    }
+    return newNewsItem;
+}
+
+-(EventItem*)createEventFromDetailsDictionary:(NSDictionary*)dict{
+    EventItem *newEventItem = [[EventItem alloc] init];
+    
+    for(id key2 in dict) {
+        
+        NSString *keyString2 = (NSString *)key2;
+        id value2 = [dict objectForKey:keyString2];
+        
+        if ([keyString2 isEqualToString:@"SHORT_TEXT"]) {
+            newEventItem.title = [value2 objectForKey:@"title"];
+        }else if ([keyString2 isEqualToString:@"LONG_TEXT"]) {
+            newEventItem.descript = [[value2 objectForKey:@"description"] stringByConvertingHTMLToPlainText];
+        }else if ([keyString2 isEqualToString:@"HYPERLINK"]) {
+            newEventItem.siteURL = [value2 objectForKey:@"siteLink"];
+        }else if ([keyString2 isEqualToString:@"IMAGE"]) {
+        }else if ([keyString2 isEqualToString:@"TIMEDATE"]){
+            newEventItem.startDate = [newEventItem convertLongNumberToDate:[value2 objectForKey:@"startDate"]];
+            newEventItem.endDate = [newEventItem convertLongNumberToDate:[value2 objectForKey:@"endDate"]];
+        }else if ([keyString2 isEqualToString:@"itemId"]) {
+            newEventItem.ID= [dict objectForKey:@"itemId"];
+        }else if ([keyString2 isEqualToString:@"REF_N1"]){
+            newEventItem.clubReferenceID = [dict objectForKey:@"location"];
+        }
+        
+    }
+    return newEventItem;
+}
+
+- (UIImage *) loadImageFromURLwithName:(NSString *) imageUrl {
  
-    
-    NSString *imageUrl = [NSString stringWithFormat:@"%@%@", serverURL, imageName];
     imageUrl = [imageUrl stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-    
+
     NSURL  *url = [NSURL URLWithString:imageUrl];
     NSData *urlData = [NSData dataWithContentsOfURL:url];
     
@@ -197,7 +271,6 @@
     
     return image;
 }
-
 
 @end
 

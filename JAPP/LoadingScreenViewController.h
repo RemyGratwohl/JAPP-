@@ -8,8 +8,9 @@
 
 #import "MapViewController.h"
 #import "ServerManager.h"
+#import "Reachability.h"
 
-@interface LoadingScreenViewController : UIViewController <ServerLoadFinishedDelegate>
+@interface LoadingScreenViewController : UIViewController <ServerLoadFinishedDelegate, UIAlertViewDelegate,UIApplicationDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
 

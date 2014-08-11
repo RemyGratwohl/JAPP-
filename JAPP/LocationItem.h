@@ -10,6 +10,7 @@
 
 @interface LocationItem : BaseItem
 
+@property NSString *name;
 @property NSString *address1;
 @property NSString *address2;
 @property NSString *postalCode;
@@ -18,7 +19,6 @@
 @property NSString *phoneNumber;
 @property NSString *fax;
 @property NSString *email;
-@property NSString *siteURL;
 @property NSString *mapURL;
 @property NSString *facebookURL;
 @property NSString *type;
@@ -29,6 +29,8 @@
 
 @property Boolean isGlobal;
 
--(NSString*)description;
+@property UIImage *bannerImage;
+
+-(NSString*)descript;
 
 @end

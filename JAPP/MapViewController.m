@@ -13,26 +13,30 @@
 #import "LocationItem.h"
 #import "TreffListeViewController.h"
 #import "TreffSeiteViewController.h"
+#import "AgendaListeViewController.h"
 
 @interface MapViewController ()
+
+@property (strong,nonatomic) ServerManager *manager;
 
 @end
 
 @implementation MapViewController
 
 UIButton *ButtonPressed;
+LocationItem *sentLocation;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     self.buttons = [[NSMutableArray alloc] init];
+    self.manager.delegate = self;
     
     // Do any additional setup after loading the view, typically from a nib.
     [CommonFunctions setResolutionFriendlyImageNamed:@"JAPP_BG" forImageView:self.backgroundImageView];
     
     [self generateMapIcons];
-    
     
     
     
@@ -64,9 +68,14 @@ UIButton *ButtonPressed;
 
 // Performs Segue Using a Notification's Name
 -(void)performSegueUsingNotification:(NSNotification*)notification{
+    if([[notification  name]  isEqual: @"openTreffDetailView"]){
+        sentLocation = [notification object];
+    }
+    
     [self performSegueWithIdentifier:[notification name
                                       ] sender:self];
 }
+
 
 - (BOOL)shouldAutorotate {
     return NO;
@@ -80,7 +89,12 @@ UIButton *ButtonPressed;
 
         UIButton *newButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         
-        newButton.frame = CGRectMake( key.posX / 2, key.posY / 2, 26, 26);
+        if([UIScreen mainScreen].bounds.size.height == 568){
+            newButton.frame = CGRectMake( key.posX / 2, key.posY / 2, 26, 26);
+        }else{
+            newButton.frame = CGRectMake( key.posX / 2 * 0.8 + 25, key.posY * 0.8 / 2, 26, 26);
+        }
+        
         newButton.tag = [key.ID integerValue];
         
         
@@ -115,7 +129,6 @@ UIButton *ButtonPressed;
 
 -(LocationItem*) findLocationByID: (NSInteger) integer{
     for(LocationItem* item in self.locations){
-        NSLog(@"%d  %d",[item.ID integerValue],integer);
         if([item.ID integerValue] == integer){
             return item;
         }
@@ -142,18 +155,24 @@ UIButton *ButtonPressed;
         mvc.locationList = self.locations;
     }else if ([[segue identifier] isEqualToString:@"openTreffDetailView"]){
         TreffSeiteViewController *mvc = [segue destinationViewController];
-        NSLog(@"%@",[self findLocationByID: ButtonPressed.tag]);
-        mvc.selectedLocation = [self findLocationByID: ButtonPressed.tag];
+        
+        if(ButtonPressed == NULL){
+            mvc.selectedLocation = sentLocation;
+        }else{
+            mvc.selectedLocation = [self findLocationByID: ButtonPressed.tag];
+            
+        }
+        
+    }else if ([[segue identifier] isEqualToString:@"openAgendaView"]){
+        AgendaListeViewController *mvc = [segue destinationViewController];
+        mvc.locations = self.locations;
+        mvc.events = [NSMutableArray arrayWithArray:self.events];
     }
 }
 
 - (void)networkChanged:(NSNotification *)notification
 {
     NetworkStatus remoteHostStatus = [self.hostReachability currentReachabilityStatus];
-    
-    ServerManager* server =[[ServerManager alloc] init];
-    server.delegate = self;
-    
     
     // Get mails if either Wifi or GSM/Edge/... connected
     if(remoteHostStatus == NotReachable)
@@ -162,26 +181,31 @@ UIButton *ButtonPressed;
     }
     else if (remoteHostStatus == ReachableViaWiFi)
     {
-        [server doLoadDataFromServerOfType:LOCATION];
+        [self.manager doLoadDataFromServerOfType:LOCATION];
     }
     else if (remoteHostStatus == ReachableViaWWAN)
     {
-        [server doLoadDataFromServerOfType:LOCATION];
+        [self.manager doLoadDataFromServerOfType:LOCATION];
     }
     
 }
 
-- (void) didFinishLoadingLocations:(NSMutableArray *)locations{
-    self.locations = [NSArray arrayWithArray:locations];
-    [self generateMapIcons];
-}
-
-- (void) didFinishLoadingEvents:(NSMutableArray *)events{
+-(void)didFinishLoadingItems:(NSMutableArray *)items ofType:(ItemType)type{
     
-}
-
-- (void) didFinishLoadingNews:(NSMutableArray *)news{
-    
+    switch(type){
+        case(LOCATION):
+            self.locations = [NSArray arrayWithArray:items];
+            [self.manager doLoadDataFromServerOfType:EVENT];
+            [self generateMapIcons];
+            break;
+        case(EVENT):
+            self.events= [NSArray arrayWithArray:items];
+            [self.manager doLoadDataFromServerOfType:NEWS];
+            break;
+        case(NEWS):
+            self.events= [NSArray arrayWithArray:items];
+            break;
+    }
 }
 
 @end
