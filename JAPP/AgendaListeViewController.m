@@ -169,13 +169,18 @@ bool isFilterViewOpen = false;
             
             if(!newEvent.facebookURL){
                 newCell.facebookButton.enabled = false;
+            }else{
+                newCell.facebookButton.tag = [newEvent.ID integerValue];
             }
             
             if(!newEvent.siteURL){
                 newCell.websiteButton.enabled = false;
+            }else{
+                newCell.websiteButton.tag = [newEvent.ID integerValue];
             }
             
-            newCell.phoneButton.enabled = false;
+            newCell.phoneButton.enabled = false; //TODO: Phone button has to be checked if valid and then enabled
+
             
             [newCell.facebookButton addTarget:self action:@selector(facebookButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
             [newCell.websiteButton addTarget:self action:@selector(websiteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -371,46 +376,44 @@ bool isFilterViewOpen = false;
 
 - (IBAction)facebookButtonPressed:(id)sender {
     
-    /*
+    
     UIButton *button = (UIButton*)sender;
-    UITableViewCell *cell = (UITableViewCell *)button.superview;
-    NSLog(@"%@",cell);
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    EventItem *eventItem = [self.currentEventList objectAtIndex:[indexPath row ]];
+    
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ID==%d",button.tag];
 
+    EventItem *eventItem = [self.events filteredArrayUsingPredicate:predicate][0];
+    
     NSURL *url = [NSURL URLWithString: [NSString stringWithFormat: @"fb:%@",eventItem.facebookURL]];
-    NSLog(@"%@",url);
+    
     BOOL isInstalled = [[UIApplication sharedApplication] canOpenURL:url];
+    
     if(isInstalled){
         [[UIApplication sharedApplication]  openURL: url];
     }else{
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:eventItem.facebookURL]];
     }
-     */
 }
 
 - (IBAction)websiteButtonPressed:(id)sender {
-    /*
-     NSURL *url = [NSURL URLWithString: [NSString stringWithFormat: @"fb:%@",self.selectedLocation.facebookURL]];
-     BOOL isInstalled = [[UIApplication sharedApplication] canOpenURL:url];
-     if(isInstalled){
-     [[UIApplication sharedApplication]  openURL: url];
-     }else{
-     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.selectedLocation.facebookURL]];
-     }
-     */
+    
+    UIButton *button = (UIButton*)sender;
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ID==%d",button.tag];
+    EventItem *eventItem = [self.events filteredArrayUsingPredicate:predicate][0];
+    
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:eventItem.siteURL]];
 }
 
 - (IBAction)phoneButtonPressed:(id)sender {
-    /*
-     NSURL *url = [NSURL URLWithString: [NSString stringWithFormat: @"fb:%@",self.selectedLocation.facebookURL]];
-     BOOL isInstalled = [[UIApplication sharedApplication] canOpenURL:url];
-     if(isInstalled){
-     [[UIApplication sharedApplication]  openURL: url];
-     }else{
-     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.selectedLocation.facebookURL]];
-     }
-     */
+    
+    UIButton *button = (UIButton*)sender;
+
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ID==%@",button.tag];
+    LocationItem *location = [self.locations filteredArrayUsingPredicate:predicate][0];
+    
+    NSURL *url = [NSURL URLWithString: [NSString stringWithFormat: @"telprompt:%@",location.phoneNumber]];
+    [[UIApplication sharedApplication] openURL:url];
 }
 
 @end

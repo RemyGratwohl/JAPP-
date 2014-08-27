@@ -14,6 +14,7 @@
     return [NSString stringWithFormat: @"\nTitle=%@\nID=%@\nSiteURL=%@\nAuthorName=%@\n", self.title,self.ID,self.siteURL,self.authorName];
 }
 
+/*
 -(void)encodeWithCoder:(NSCoder *)encoder{
     
     [super encodeWithCoder:encoder];
@@ -32,6 +33,7 @@
     }
     return self;
 }
+*/
 
 - (NSDate*) convertLongNumberToDate:(NSNumber *)dateLong {
     

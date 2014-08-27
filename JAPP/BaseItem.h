@@ -10,7 +10,7 @@
 
 @class BaseItem;
 
-@interface BaseItem : NSObject <NSCoding>
+@interface BaseItem : NSObject
 
 @property NSNumber *ID;
 @property NSString *descript;

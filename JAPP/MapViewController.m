@@ -161,12 +161,10 @@
     else if (remoteHostStatus == ReachableViaWiFi)
     {
         [self.manager doLoadDataFromServerOfType:EVENT];
-        [self.manager doLoadDataFromServerOfType:NEWS];
     }
     else if (remoteHostStatus == ReachableViaWWAN)
     {
         [self.manager doLoadDataFromServerOfType:EVENT];
-        [self.manager doLoadDataFromServerOfType:NEWS];
     }
     
 }
@@ -179,6 +177,7 @@
             break;
         case(EVENT):
             self.events= [NSArray arrayWithArray:items];
+            [self.manager doLoadDataFromServerOfType:NEWS];
             break;
         case(NEWS):
             self.news= [NSArray arrayWithArray:items];

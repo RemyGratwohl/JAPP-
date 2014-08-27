@@ -28,6 +28,7 @@
     
     [self.datenschutzTextView setFont:textFont];
     [self.datenschutzTextView setTextColor:[[UIColor blackColor] colorWithAlphaComponent:0.4f]];
+    [self.datenschutzTextView setText: datenschutzText];
 
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyy"];

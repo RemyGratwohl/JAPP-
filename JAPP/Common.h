@@ -29,5 +29,7 @@ static NSString *serverTestingURL = @"japp.14.skintest.lan";
 static NSString *treffLetter = @"t";
 static NSString *organizationLetter = @"o";
 
+static NSString *datenschutzText = @"Die APP sammelt und speichert keine personenbezogenen Daten. Daten, welche Sie uns zusenden, verwenden wir ausschliesslich zur Beantwortung Ihrer Anfragen, zur Verbesserung APP oder um mit Ihnen zu kommunizieren. Sämtliche automatischen Informationen, welche wir empfangen und speichern, werden ausschliesslich zu internen Zwecken ausgewertet. Auch verlangen wir von Ihnen keine persönlichen Angaben. Wir verpflichten uns dazu, Daten, welche an uns gelangen, nur dann an Dritte weiterzuleiten, wenn dies mit dem Datenschutzgesetz vereinbar ist.";
+
 
 #endif

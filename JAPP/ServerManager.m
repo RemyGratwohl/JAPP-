@@ -77,7 +77,7 @@ static NSString *imageURL = @"http://japp.14.skintest.lan/Portals/0/contortionis
     [responseData appendData:data];
     
     //NSString* resString =  [[NSString alloc] initWithData:responseData encoding:NSASCIIStringEncoding];
-    //NSLog(@"%@",resString);
+    //]NSLog(@"%@",resString);
 }
 
 
@@ -194,7 +194,8 @@ static NSString *imageURL = @"http://japp.14.skintest.lan/Portals/0/contortionis
             lItem.phoneNumber = [value2 objectForKey:@"phone"];
         }else if ([keyString2 isEqualToString:@"LONG_TEXT"]) {
             lItem.descript = [[value2 objectForKey:@"description"] stringByConvertingHTMLToPlainText];
-            lItem.hoursOfOperation = [[value2 objectForKey:@"hoursOfOperation"] stringByConvertingHTMLToPlainText];
+            lItem.hoursOfOperation = [[value2 objectForKey:@"hoursOfOperation"] stringByReplacingOccurrencesOfString:@"\n" withString:@"#$#"];
+            lItem.hoursOfOperation = [lItem.hoursOfOperation stringByConvertingHTMLToPlainText];
         }else if ([keyString2 isEqualToString:@"HYPERLINK"]) {
             lItem.siteURL = [value2 objectForKey:@"siteUrl"];
             lItem.facebookURL = [value2 objectForKey:@"facebookUrl"];
@@ -275,7 +276,7 @@ static NSString *imageURL = @"http://japp.14.skintest.lan/Portals/0/contortionis
             newEventItem.startDate = [newEventItem convertLongNumberToDate:[value2 objectForKey:@"startDate"]];
             newEventItem.endDate = [newEventItem convertLongNumberToDate:[value2 objectForKey:@"endDate"]];
         }else if ([keyString2 isEqualToString:@"itemId"]) {
-            newEventItem.ID= [dict objectForKey:@"itemId"];
+            newEventItem.ID = [dict objectForKey:@"itemId"];
         }else if ([keyString2 isEqualToString:@"REF_N1"]){
             NSDictionary *idDictionary = [dict objectForKey:@"REF_N1"];
             newEventItem.clubReferenceID = [idDictionary objectForKey:@"location"];

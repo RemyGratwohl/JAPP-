@@ -33,7 +33,10 @@
     
     [self.nameLabel setText:[self.selectedLocation.name uppercaseString]];
     
-    self.openingTimesLabel.text = self.selectedLocation.hoursOfOperation;
+    self.openingTimesLabel.text = [self.selectedLocation.hoursOfOperation stringByReplacingOccurrencesOfString:@"#$#" withString:@"\n"];
+    
+    
+    
     [self.countryLabel setText:self.selectedLocation.country];
     [self.address1Label setText:self.selectedLocation.address1];
     [self.postalCodeLabel setText:self.selectedLocation.postalCode];
@@ -119,7 +122,7 @@
 }
 
 - (IBAction)openPhone:(id)sender {
-    NSURL *url = [NSURL URLWithString: [NSString stringWithFormat: @"tel:%@",self.selectedLocation.phoneNumber]];
+    NSURL *url = [NSURL URLWithString: [NSString stringWithFormat: @"telprompt:%@",self.selectedLocation.phoneNumber]];
     [[UIApplication sharedApplication] openURL:url];
 }
 

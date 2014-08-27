@@ -115,8 +115,7 @@
 // the order of Locations, Events, and then News
 -(void) beginRetrievingDataFromServer{
     [self.manager doLoadDataFromServerOfType:LOCATION];
-    [self.manager doLoadDataFromServerOfType:EVENT];
-    [self.manager doLoadDataFromServerOfType:NEWS];
+
 }
 
 -(NSArray*) retrieveDataFromCacheOfType:(NSString*)type{
@@ -145,9 +144,11 @@
     switch(type){
         case(LOCATION):
             self.retrievedLocations = [NSArray arrayWithArray:items];
+                [self.manager doLoadDataFromServerOfType:EVENT];
             break;
         case(EVENT):
             self.retrievedEvents = [NSArray arrayWithArray:items];
+            [self.manager doLoadDataFromServerOfType:NEWS];
             break;
         case(NEWS):
              self.retrievedNews = [NSArray arrayWithArray:items];
