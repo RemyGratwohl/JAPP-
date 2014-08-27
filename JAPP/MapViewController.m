@@ -8,38 +8,37 @@
 
 #import "MapViewController.h"
 #import "Common.h"
-#import "CommonFunctions.h"
-#import "UIImage+ImageEffects.h"
+#import "Utilities.h"
 #import "LocationItem.h"
+#import "Reachability.h"
 #import "TreffListeViewController.h"
 #import "TreffSeiteViewController.h"
 #import "AgendaListeViewController.h"
+#import "NewsItem.h"
 
 @interface MapViewController ()
-
-@property (strong,nonatomic) ServerManager *manager;
-
+    @property (strong,nonatomic)  ServerManager  *manager;
+    @property (strong, nonatomic) Reachability   *hostReachability;
+    @property (strong,nonatomic)  NSMutableArray *mapButtonArray;
 @end
 
 @implementation MapViewController
-
-UIButton *ButtonPressed;
-LocationItem *sentLocation;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    self.buttons = [[NSMutableArray alloc] init];
-    self.manager.delegate = self;
-    
     // Do any additional setup after loading the view, typically from a nib.
-    [CommonFunctions setResolutionFriendlyImageNamed:@"JAPP_BG" forImageView:self.backgroundImageView];
+    
+    self.mapButtonArray = [[NSMutableArray alloc] init];
+    self.manager = [[ServerManager alloc] init];
+    self.manager.delegate = self;
+    self.hostReachability = [Reachability reachabilityWithHostName: HostReachabilityURL];
+    
+    [Utilities setResolutionFriendlyImageNamed:@"MapViewBackgroundImage" forImageView:self.backgroundImageView];
     
     [self generateMapIcons];
-    
-    
-    
+
     // Segue Notifcations
     
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -62,18 +61,27 @@ LocationItem *sentLocation;
                                                  name: @"openAgendaView"
                                                object: nil];
      
-     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkChanged:) name:UIApplicationWillEnterForegroundNotification object:nil];
-     self.hostReachability = [Reachability reachabilityWithHostName:@"www.sitewalk.com" ]; // @"www.google.ch"
+     [[NSNotificationCenter defaultCenter] addObserver:self
+                                              selector:@selector(networkChanged:)
+                                                  name:UIApplicationWillEnterForegroundNotification
+                                                object:nil];
 }
 
 // Performs Segue Using a Notification's Name
 -(void)performSegueUsingNotification:(NSNotification*)notification{
-    if([[notification  name]  isEqual: @"openTreffDetailView"]){
-        sentLocation = [notification object];
-    }
     
-    [self performSegueWithIdentifier:[notification name
+    if([[notification  name]  isEqual: @"openTreffDetailView"]){
+        
+        LocationItem *sentLocation = [notification object];
+        
+        [self performSegueWithIdentifier:[notification name
+                                          ] sender:sentLocation.ID];
+        
+    }else{
+    
+        [self performSegueWithIdentifier:[notification name
                                       ] sender:self];
+    }
 }
 
 
@@ -89,26 +97,35 @@ LocationItem *sentLocation;
 
         UIButton *newButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         
-        if([UIScreen mainScreen].bounds.size.height == 568){
+        // The positions need to be divided by two because of the retina display
+        // 26 x 26 is the icon size provided
+        /* For the iphone 4, it was necessary to resize the background image map in photoshop, so
+           80% scale down and 25 shift left was done */
+        
+        if(IS_IPHONE_SERIES_5){
             newButton.frame = CGRectMake( key.posX / 2, key.posY / 2, 26, 26);
-        }else{
+        }else if (IS_IPHONE_SERIES_4){
             newButton.frame = CGRectMake( key.posX / 2 * 0.8 + 25, key.posY * 0.8 / 2, 26, 26);
+        }else{
+            NSLog(@"Unable to place map icons due to unknown screen size");
+            return NO;
         }
         
         newButton.tag = [key.ID integerValue];
         
-        
-        if([key.type isEqualToString:@"t"]){
-            [newButton setBackgroundImage:[UIImage imageNamed:@"treff_Icon"] forState: UIControlStateNormal];
+        if([key.type isEqualToString:treffLetter]){
+            [newButton setBackgroundImage:[UIImage imageNamed:@"TreffIconImage"] forState: UIControlStateNormal];
+        }else if ([key.type isEqualToString:organizationLetter]){
+            [newButton setBackgroundImage:[UIImage imageNamed:@"OrganisationIconImage"] forState: UIControlStateNormal];
         }else{
-            [newButton setBackgroundImage:[UIImage imageNamed:@"org_icon-568"] forState: UIControlStateNormal];
+            NSLog(@"Unknown Club Type!");
         }
         
         [newButton addTarget:self
                       action:@selector(mapIconPressed:)
-         forControlEvents:UIControlEventTouchUpInside];
+            forControlEvents:UIControlEventTouchUpInside];
         
-        [self.buttons addObject:newButton];
+        [self.mapButtonArray addObject:newButton];
         [self.view addSubview:newButton];
     }
     
@@ -116,33 +133,58 @@ LocationItem *sentLocation;
 }
 
 -(void)clearButtons{
-    for(UIButton *b in self.buttons){
+    for(UIButton *b in self.mapButtonArray){
         [b removeFromSuperview];
     }
 }
 
-
 -(void)mapIconPressed: (UIButton*) button{
-    ButtonPressed = button;
-    [self performSegueWithIdentifier: @"openTreffDetailView" sender: self];
+    NSNumber *idOfBUtton = [NSNumber numberWithInteger:button.tag ];
+    [self performSegueWithIdentifier: @"openTreffDetailView" sender: idOfBUtton];
 }
-
--(LocationItem*) findLocationByID: (NSInteger) integer{
-    for(LocationItem* item in self.locations){
-        if([item.ID integerValue] == integer){
-            return item;
-        }
-    }
-    
-    return nil;
-}
-
-
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)networkChanged:(NSNotification *)notification
+{
+    NetworkStatus remoteHostStatus = [self.hostReachability currentReachabilityStatus];
+    
+    // Get data if either Wifi or GSM/Edge/... connected
+    if(remoteHostStatus == NotReachable)
+    {
+        NSLog(@"No connection to sitewalk.com host possible");
+    }
+    else if (remoteHostStatus == ReachableViaWiFi)
+    {
+        [self.manager doLoadDataFromServerOfType:EVENT];
+        [self.manager doLoadDataFromServerOfType:NEWS];
+    }
+    else if (remoteHostStatus == ReachableViaWWAN)
+    {
+        [self.manager doLoadDataFromServerOfType:EVENT];
+        [self.manager doLoadDataFromServerOfType:NEWS];
+    }
+    
+}
+
+-(void)didFinishLoadingItems:(NSMutableArray *)items ofType:(ItemType)type{
+    
+    switch(type){
+        case(LOCATION):
+            // Location updating adds addtional traffic because they don't change often
+            break;
+        case(EVENT):
+            self.events= [NSArray arrayWithArray:items];
+            break;
+        case(NEWS):
+            self.news= [NSArray arrayWithArray:items];
+            break;
+    }
+
 }
 
 #pragma mark - Navigation
@@ -156,55 +198,25 @@ LocationItem *sentLocation;
     }else if ([[segue identifier] isEqualToString:@"openTreffDetailView"]){
         TreffSeiteViewController *mvc = [segue destinationViewController];
         
-        if(ButtonPressed == NULL){
-            mvc.selectedLocation = sentLocation;
-        }else{
-            mvc.selectedLocation = [self findLocationByID: ButtonPressed.tag];
-            
-        }
+        NSNumber *num = sender; // Abuse of sender so that both clicking on a button and the trefflistetable sends an nsnumber
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ID==%d",[num integerValue]];
+        mvc.selectedLocation   = [self.locations filteredArrayUsingPredicate:predicate][0];
+        
+        NSPredicate *newsPredicate = [NSPredicate predicateWithFormat:@"clubReferenceID=%@",mvc.selectedLocation.ID];
+        
+        NSArray *sortedNews= [[self.news filteredArrayUsingPredicate:newsPredicate] sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+            NSDate *first  = [(NewsItem*)a publishDate];
+            NSDate *second = [(NewsItem*)b publishDate];
+            return [second compare:first];
+        }];
+        
+        mvc.locationNews = sortedNews;
         
     }else if ([[segue identifier] isEqualToString:@"openAgendaView"]){
         AgendaListeViewController *mvc = [segue destinationViewController];
         mvc.locations = self.locations;
         mvc.events = [NSMutableArray arrayWithArray:self.events];
-    }
-}
-
-- (void)networkChanged:(NSNotification *)notification
-{
-    NetworkStatus remoteHostStatus = [self.hostReachability currentReachabilityStatus];
-    
-    // Get mails if either Wifi or GSM/Edge/... connected
-    if(remoteHostStatus == NotReachable)
-    {
-        NSLog(@"No connection to sitewalk.com host possible");
-    }
-    else if (remoteHostStatus == ReachableViaWiFi)
-    {
-        [self.manager doLoadDataFromServerOfType:LOCATION];
-    }
-    else if (remoteHostStatus == ReachableViaWWAN)
-    {
-        [self.manager doLoadDataFromServerOfType:LOCATION];
-    }
-    
-}
-
--(void)didFinishLoadingItems:(NSMutableArray *)items ofType:(ItemType)type{
-    
-    switch(type){
-        case(LOCATION):
-            self.locations = [NSArray arrayWithArray:items];
-            [self.manager doLoadDataFromServerOfType:EVENT];
-            [self generateMapIcons];
-            break;
-        case(EVENT):
-            self.events= [NSArray arrayWithArray:items];
-            [self.manager doLoadDataFromServerOfType:NEWS];
-            break;
-        case(NEWS):
-            self.events= [NSArray arrayWithArray:items];
-            break;
     }
 }
 

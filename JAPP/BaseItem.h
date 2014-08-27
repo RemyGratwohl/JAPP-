@@ -12,7 +12,7 @@
 
 @interface BaseItem : NSObject <NSCoding>
 
-@property NSString *ID;
+@property NSNumber *ID;
 @property NSString *descript;
 @property NSString *siteURL;
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
+        <deployment defaultVersion="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <objects>
@@ -13,7 +14,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="61"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Agenda_Cell-568" translatesAutoresizingMaskIntoConstraints="NO" id="0yf-Xd-Ufg">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="AgendaListeCellBackgroundImage" translatesAutoresizingMaskIntoConstraints="NO" id="0yf-Xd-Ufg">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </imageView>
@@ -32,9 +33,16 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gy0-bX-oSz">
-                        <rect key="frame" x="0.0" y="0.0" width="70" height="60"/>
+                        <rect key="frame" x="2" y="1" width="68" height="41"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <fontDescription key="fontDescription" name="HelveticaNeue-UltraLight" family="Helvetica Neue" pointSize="42"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="upP-ee-msG">
+                        <rect key="frame" x="2" y="36" width="68" height="21"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
@@ -43,12 +51,13 @@
             <connections>
                 <outlet property="backgroundImage" destination="0yf-Xd-Ufg" id="Oq4-Ul-jlC"/>
                 <outlet property="dateLabel" destination="Gy0-bX-oSz" id="I5z-Js-Ftr"/>
+                <outlet property="monthLabel" destination="upP-ee-msG" id="XhI-tH-mFJ"/>
                 <outlet property="nameLabel" destination="qNH-ya-zaL" id="Gks-BT-taF"/>
                 <outlet property="timeAndLocationLabel" destination="1AZ-Yp-2h8" id="ybA-iM-vvS"/>
             </connections>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="Agenda_Cell-568" width="264" height="60"/>
+        <image name="AgendaListeCellBackgroundImage" width="264" height="60"/>
     </resources>
 </document>

@@ -15,9 +15,17 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
+        for (id obj in self.subviews) {
+            if ([obj respondsToSelector:@selector(setDelaysContentTouches:)]) {
+                [obj setDelaysContentTouches:NO];
+            }
+        }
+
     }
     
     return self;
+    
+    
 }
 
 - (void)awakeFromNib

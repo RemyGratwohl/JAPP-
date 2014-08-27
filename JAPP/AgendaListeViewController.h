@@ -30,7 +30,9 @@ extern const float AGENDA_TABLEVIEW_DETAIL_ROW_HEIGHT;
 
 // Data
 @property (strong,nonatomic) NSArray *locations;
-@property (strong,nonatomic) NSMutableArray *events;
+@property (strong,nonatomic) NSArray *events;
+
+
 
 
 @end

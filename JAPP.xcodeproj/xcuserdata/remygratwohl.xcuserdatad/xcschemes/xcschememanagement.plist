@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>JAPP copy.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>JAPP.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -18,6 +23,16 @@
 			<true/>
 		</dict>
 		<key>393E3A271948838500D83E4F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>39AEE6FB19AC873700D2697F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>39AEE73119AC878500D2697F</key>
 		<dict>
 			<key>primary</key>
 			<true/>

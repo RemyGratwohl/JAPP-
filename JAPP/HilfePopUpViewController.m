@@ -7,6 +7,7 @@
 //
 
 #import "HilfePopUpViewController.h"
+#import "Utilities.h"
 
 @interface HilfePopUpViewController ()
 
@@ -17,11 +18,30 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view.
     
-    [self setBackgroundImageNamed:@"hilfe-popup"];
-    [self setSwipeGestureDirection:UISwipeGestureRecognizerDirectionDown numberOfTocuhesRequired:1];
+    [Utilities setResolutionFriendlyImageNamed:@"HilfePopupBackground" forImageView:self.backgroundImageView];
+    
+    // Initalize Text-Based UI
+    UIFont* textFont = [UIFont fontWithName:@"Lato-Regular" size:13];
+    
+    [self.datenschutzTextView setFont:textFont];
+    [self.datenschutzTextView setTextColor:[[UIColor blackColor] colorWithAlphaComponent:0.4f]];
 
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy"];
+    NSString *yearString = [formatter stringFromDate:[NSDate date]];
+    
+    [self.impressumLabel setFont:textFont];
+     self.impressumLabel.text = [NSString stringWithFormat:@"© %@ \nVerein Liechtensteiner \nJugendorganisationen",yearString];
+    
+    // Close View on Downwards Swipe
+    UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(closeView:)];
+    swipeGesture.numberOfTouchesRequired = 1;
+    swipeGesture.direction = UISwipeGestureRecognizerDirectionDown;
+    [self.view addGestureRecognizer:swipeGesture];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -39,39 +59,19 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"openTreffListeView" object:nil];
     }];
 }
+
 - (IBAction)agendaButtonPressed:(id)sender {
     [self dismissViewControllerAnimated:YES completion:^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"openAgendaView" object:nil];
     }];
 }
 
--(void)setBackgroundImageNamed:(NSString*)imageName{
-    if([UIScreen mainScreen].bounds.size.height == 568){
-        self.background.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-568",imageName]];
-    }else{
-        self.background.image = [UIImage imageNamed:imageName];
-    }
+- (IBAction)sitewalkLogoPressed:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"http://www.sitewalk.com"]];
 }
 
--(void)setSwipeGestureDirection:(UISwipeGestureRecognizerDirection)direction numberOfTocuhesRequired:(int)num{
-    
-    UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(closeView:)];
-    
-    swipeGesture.numberOfTouchesRequired = num;
-    swipeGesture.direction= direction;
-    
-    [self.view addGestureRecognizer:swipeGesture];
+- (IBAction)arminLogoPressed:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"http://www.armindesign.li"]];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

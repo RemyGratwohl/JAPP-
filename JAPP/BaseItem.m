@@ -10,6 +10,7 @@
 
 @implementation BaseItem
 
+/*
 -(void)encodeWithCoder:(NSCoder *)encoder{
     [encoder encodeObject:self.ID forKey:@"ID"];
     [encoder encodeObject:self.siteURL forKey:@"siteURL"];
@@ -25,6 +26,6 @@
     }
     return self;
 }
-
+*/
 
 @end

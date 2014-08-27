@@ -7,7 +7,9 @@
 //
 
 #import "TreffSeiteViewController.h"
-#import "CommonFunctions.h"
+#import "Utilities.h"
+#import "NewsItem.h"
+#import "UIImageView+WebCache.h"
 
 @interface TreffSeiteViewController ()
 
@@ -18,20 +20,37 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view.
+    [Utilities setResolutionFriendlyImageNamed:@"TreffSeiteBackgroundImage" forImageView:self.backgroundImageView];
     
-    [CommonFunctions setResolutionFriendlyImageNamed:@"Treffseite" forImageView:self.backgroundImageView];
-    [self setSwipeGestureDirection:UISwipeGestureRecognizerDirectionDown numberOfTocuhesRequired:1];
+    UIFont* textFont = [UIFont fontWithName:@"Lato-Regular" size:18];
+
+    [self.nameLabel setFont:textFont];
     
-    NSLog(@"%@",self.selectedLocation);
-    [self.nameLabel setText:self.selectedLocation.name];
-    [self.cityLabel setText:self.selectedLocation.place];
+    self.descriptionTextView.contentInset = UIEdgeInsetsMake(-7.0,0.0,0,0.0);
+    [self.descriptionTextView setText:self.selectedLocation.descript];
+    
+    [self.nameLabel setText:[self.selectedLocation.name uppercaseString]];
+    
     self.openingTimesLabel.text = self.selectedLocation.hoursOfOperation;
     [self.countryLabel setText:self.selectedLocation.country];
     [self.address1Label setText:self.selectedLocation.address1];
     [self.postalCodeLabel setText:self.selectedLocation.postalCode];
+    [self.cityLabel setText: self.selectedLocation.place];
     
-    [self.bannerImage setImage:self.selectedLocation.bannerImage];
+    
+    
+    [self.bannerImage sd_setImageWithURL:[NSURL URLWithString:self.selectedLocation.imageURL ]];
+    
+    CAShapeLayer * maskLayer = [CAShapeLayer layer];
+    maskLayer.path = [UIBezierPath bezierPathWithRoundedRect: self.bannerImage.bounds byRoundingCorners: UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii: (CGSize){15, 15}].CGPath;
+    
+    self.bannerImage.layer.mask = maskLayer;
+    
+    
+    [self initalizeNewsUI];
+    
     
     if([self.selectedLocation.siteURL  isEqual: @""]){
         self.websiteButton.enabled = false;
@@ -44,6 +63,42 @@
     }
     if ([self.selectedLocation.email isEqualToString:@""]){
         self.emailButton.enabled = false;
+    }
+    
+    if ([self.selectedLocation.mapURL isEqualToString:@""]){
+        self.showInMapsButton.enabled = false;
+    }
+}
+
+-(void)initalizeNewsUI{
+    NSArray *newsLabels = [NSArray arrayWithObjects:self.news1Label,self.news2Label,self.news3Label, nil];
+    NSMutableArray *recentNews =[[NSMutableArray alloc] init];
+    UIFont* textFont = [UIFont fontWithName:@"Lato-Regular" size:14];
+    
+    if([self.locationNews count] >= 1){
+        [recentNews addObject: [self.locationNews objectAtIndex:0]];
+    }
+    if([self.locationNews count] >= 2){
+        [recentNews addObject: [self.locationNews objectAtIndex:1]];
+    }
+    if([self.locationNews count] >= 3){
+        [recentNews addObject:[self.locationNews objectAtIndex:2]];
+    }
+    
+    for(UILabel *l in newsLabels){
+        [l setFont:textFont];
+        [l setText:@""];
+    }
+    
+    if([recentNews count] == 0){
+        [self.news2Label setText:@"Kein Aktuelle Nachrichten"];
+    }else{
+        for(int i = 0; i < [recentNews count]; i++){
+            UILabel *label = [newsLabels objectAtIndex:i];
+            NewsItem *news = [recentNews objectAtIndex:i];
+            
+            [label setText: news.title];
+        }
     }
 }
 
@@ -58,6 +113,7 @@
 }
 
 #pragma mark Button Event Listeners
+
 - (IBAction)openWebsite:(id)sender {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString: self.selectedLocation.siteURL]];
 }
@@ -82,31 +138,16 @@
     }
 }
 
+- (IBAction)treffAgendaButtonPressed:(id)sender {
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"openAgendaView" object:self.selectedLocation];
+    }];
+}
+
 - (IBAction)openMapsInBrowser:(id)sender {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.selectedLocation.mapURL]];
 }
 
-#pragma mark Gesture Recogonizer
-
--(void)setSwipeGestureDirection:(UISwipeGestureRecognizerDirection)direction numberOfTocuhesRequired:(int)num{
-    
-    UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(closeView:)];
-    
-    swipeGesture.numberOfTouchesRequired = num;
-    swipeGesture.direction= direction;
-    
-    [self.view addGestureRecognizer:swipeGesture];
-}
-
-/*
-#pragma mark - Navigations
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

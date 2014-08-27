@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeAndLocationLabel;
+@property (weak, nonatomic) IBOutlet UILabel *monthLabel;
 
 // ImageViews
 @property (weak, nonatomic) IBOutlet UIImageView *backgroundImage;

@@ -14,6 +14,7 @@
 @property NSString *summary;
 @property NSString *authorName;
 @property NSNumber *clubReferenceID;
+@property NSDate   *publishDate;
 
 - (NSDate*) convertLongNumberToDate:(NSNumber *)dateLong;
 

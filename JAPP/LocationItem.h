@@ -30,7 +30,6 @@
 @property Boolean isGlobal;
 
 @property UIImage *bannerImage;
-
--(NSString*)descript;
+@property NSString *imageURL;
 
 @end

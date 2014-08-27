@@ -36,12 +36,12 @@
 - (NSDate*) convertLongNumberToDate:(NSNumber *)dateLong {
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"yyyy-MM-dd"];
-    NSDate *dateZero = [formatter dateFromString:@"0001-01-01"];
+    [formatter setDateFormat:@"yyyy-MM-dd-HH-mm"];
+    NSDate *dateZero = [formatter dateFromString:@"0001-01-01-01-06"];
     
     NSDate *dateCalc =[dateZero dateByAddingTimeInterval:([dateLong doubleValue] / 10000000)];
-    return dateCalc;
     
+    return dateCalc;
 }
 
 @end

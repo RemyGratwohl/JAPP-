@@ -8,7 +8,6 @@
 
 #import "MapViewController.h"
 #import "ServerManager.h"
-#import "Reachability.h"
 
 @interface LoadingScreenViewController : UIViewController <ServerLoadFinishedDelegate, UIAlertViewDelegate,UIApplicationDelegate>
 

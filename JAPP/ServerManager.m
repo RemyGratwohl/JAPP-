@@ -11,9 +11,10 @@
 #import "Common.h"
 #import "LocationItem.h"
 #import "NSString+HTML.h"
-#import "CommonFunctions.h"
+#import "Utilities.h"
 #import "NewsItem.h"
 #import "EventItem.h"
+#import "SDImageCache.h"
 
 @interface ServerManager()
     @property ItemType type;
@@ -21,6 +22,11 @@
 
 @implementation ServerManager
 
+static NSString *serverBaseURL = @"http://japp.14.skintest.lan/Portals/0/contortionistUniverses/397/";
+static NSString *serverPersistanceURLFragment = @"editSkins/persistence.ashx";
+static NSString *serverImageURLFragment = @"images/";
+
+static NSString *imageURL = @"http://japp.14.skintest.lan/Portals/0/contortionistUniverses/397/images/";
 
 - (id)init {
 	self = [super init];
@@ -53,7 +59,7 @@
     // Create url connection and fire an asychronous request
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     
-    if(connection == nil) {
+    if(!connection) {
         NSLog(@"Connection to server not initalized.");
     }
 }
@@ -70,8 +76,8 @@
     // Append the new data to the instance variable you declared
     [responseData appendData:data];
     
-    NSString* resString =  [[NSString alloc] initWithData:responseData encoding:NSASCIIStringEncoding];
-    NSLog(@"%@",resString);
+    //NSString* resString =  [[NSString alloc] initWithData:responseData encoding:NSASCIIStringEncoding];
+    //NSLog(@"%@",resString);
 }
 
 
@@ -89,7 +95,7 @@
     NSError *myError = nil;
     NSDictionary *resJson = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&myError];
     
-    if(myError == nil){
+    if(!myError){
         
         // Determine and Archive the type
         NSString *type = [self determineTypeOfJSONString:resJson];
@@ -139,12 +145,15 @@
                 NSDictionary *detailsDict  = (NSDictionary *) keyValuePair;
                 
                 // Retrieve the Type for the Appropriate Delegate Callback
-                self.type = [CommonFunctions itemTypeFromString:[detailsDict objectForKey:@"itemType"]];
+                self.type = [Utilities itemTypeFromString:[detailsDict objectForKey:@"itemType"]];
                 
                 if(self.type == LOCATION){
                     [items addObject:[self createLocationFromDetailsDictionary:detailsDict]];
                 }else if(self.type == EVENT){
-                    [items addObject:[self createEventFromDetailsDictionary:detailsDict]];
+                    EventItem *newEvent = [self createEventFromDetailsDictionary:detailsDict];
+                    if([newEvent.endDate compare:[NSDate date]] == NSOrderedDescending){
+                        [items addObject:[self createEventFromDetailsDictionary:detailsDict]];
+                    }
                 }else if (self.type == NEWS){
                     [items addObject:[self createNewsFromDetailsDictionary:detailsDict]];
                 }
@@ -193,7 +202,14 @@
             
         }else if ([keyString2 isEqualToString:@"IMAGE"]) {
             NSString *urlString = [NSString stringWithFormat:@"%@/Location_image/%@",imageURL,[value2 objectForKey:@"image"]];
-            lItem.bannerImage = [self loadImageFromURLwithName:urlString];
+            
+            UIImage *image = [self loadImageFromURLwithName:urlString];
+            
+            if(image){
+            [[SDImageCache sharedImageCache] storeImage:image forKey:urlString];
+            }
+            
+            lItem.imageURL = urlString;
         }else if ([keyString2 isEqualToString:@"INT"]){
             
             lItem.posX = [[value2 objectForKey:@"posX"] integerValue];
@@ -224,8 +240,15 @@
         }else if ([keyString2 isEqualToString:@"HYPERLINK"]) {
             newNewsItem.siteURL = [value2 objectForKey:@"siteLink"];
         }else if ([keyString2 isEqualToString:@"IMAGE"]) {
+            
+        }else if ([keyString2 isEqualToString:@"TIMEDATE"]){
+            newNewsItem.publishDate = [newNewsItem convertLongNumberToDate:[value2 objectForKey:@"publishDate"]];
+            
         } else if ([keyString2 isEqualToString:@"itemId"]) {
             newNewsItem.ID= [dict objectForKey:@"itemId"];
+        }else if ([keyString2 isEqualToString:@"REF_N1"]){
+            NSDictionary *idDictionary = [dict objectForKey:@"REF_N1"];
+            newNewsItem.clubReferenceID = [idDictionary objectForKey:@"location"];
         }
         
     }
@@ -246,6 +269,7 @@
             newEventItem.descript = [[value2 objectForKey:@"description"] stringByConvertingHTMLToPlainText];
         }else if ([keyString2 isEqualToString:@"HYPERLINK"]) {
             newEventItem.siteURL = [value2 objectForKey:@"siteLink"];
+            newEventItem.facebookURL = [value2 objectForKey:@"facebookUrl"];
         }else if ([keyString2 isEqualToString:@"IMAGE"]) {
         }else if ([keyString2 isEqualToString:@"TIMEDATE"]){
             newEventItem.startDate = [newEventItem convertLongNumberToDate:[value2 objectForKey:@"startDate"]];
@@ -253,7 +277,8 @@
         }else if ([keyString2 isEqualToString:@"itemId"]) {
             newEventItem.ID= [dict objectForKey:@"itemId"];
         }else if ([keyString2 isEqualToString:@"REF_N1"]){
-            newEventItem.clubReferenceID = [dict objectForKey:@"location"];
+            NSDictionary *idDictionary = [dict objectForKey:@"REF_N1"];
+            newEventItem.clubReferenceID = [idDictionary objectForKey:@"location"];
         }
         
     }

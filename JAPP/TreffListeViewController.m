@@ -19,11 +19,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.tableView registerNib:[UINib nibWithNibName:@"TreffListeCell" bundle:nil] forCellReuseIdentifier:@"TreffListeCell"];
     
-    if(self.locationList == NULL){
-        NSLog(@"Location List is Null");
-    }
+    [self.tableView registerNib:[UINib nibWithNibName:@"TreffListeCell" bundle:nil] forCellReuseIdentifier:@"TreffListeCell"];
+    self.headerLabel.font = [UIFont fontWithName:@"Lato-Hairline" size:53];
+    [self.tableView setContentInset:UIEdgeInsetsMake(1,0,0,0)];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -51,24 +51,38 @@
     TreffListeCell *newCell = [tableView dequeueReusableCellWithIdentifier:@"TreffListeCell"];
     
     LocationItem *item = [self.locationList objectAtIndex:indexPath.row];
-    
-    newCell.clubNameLabel.text = item.name;
+    newCell.clubNameLabel.font = [UIFont fontWithName:@"Lato-Regular" size:20];
+    newCell.clubNameLabel.text = [NSString stringWithFormat:@"%@, %@",item.name,item.place];
     
     return newCell;
 }
 
-- (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath {
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath{
     
     TreffListeCell *cell = (TreffListeCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     cell.backgroundImageView.image = [UIImage imageNamed:@"DropDownFilterButtonSelected-568"];
+
+    return indexPath;
+}
+
+
+- (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath {
+
     
+    [self performSelector:@selector(changeCellImage:)withObject:indexPath afterDelay:0.3];
     
     [self dismissViewControllerAnimated:YES completion:^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"openTreffDetailView" object:[self.locationList objectAtIndex:indexPath.row]];
     }];
+    
 }
 
-/* BUTTON HANDLERS */
+-(void)changeCellImage:(NSIndexPath*)path{
+     TreffListeCell *cell = (TreffListeCell *)[self.tableView cellForRowAtIndexPath:path];
+     cell.backgroundImageView.image = [UIImage imageNamed:@"CellBackgroundDark"];
+}
+
+# pragma mark Button Handlers
 
 - (IBAction)treffListeButtonPressed:(id)sender {
    [self dismissViewControllerAnimated:YES completion:nil];
